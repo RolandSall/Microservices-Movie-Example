@@ -18,9 +18,16 @@ public class MovieController {
         this.iMovieRepository = iMovieRepository;
     }
 
+    @GetMapping("")
+    public ResponseEntity getAllMovieInfo(){
+        return ResponseEntity.status(HttpStatus.OK).body(iMovieRepository.findAll());
+
+    }
+
     @GetMapping("/{movieId}")
     public ResponseEntity getMovieInfoById(@PathVariable("movieId") String movieId){
-       return ResponseEntity.status(HttpStatus.OK).body(iMovieRepository.findAll());
+        System.out.println(movieId);
+        return ResponseEntity.status(HttpStatus.OK).body(iMovieRepository.findBymovieId(movieId));
 
     }
 
