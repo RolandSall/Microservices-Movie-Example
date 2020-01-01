@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/movies")
 public class MovieController {
@@ -20,14 +23,19 @@ public class MovieController {
 
     @GetMapping("")
     public ResponseEntity getAllMovieInfo(){
-        return ResponseEntity.status(HttpStatus.OK).body(iMovieRepository.findAll());
+        List<Movie> movieList = iMovieRepository.findAll();
+        List<MovieApiResponse> responseList = BuildApiResponseForMovie(movieList);
+        return ResponseEntity.status(HttpStatus.OK).body(responseList);
 
     }
 
+
+
     @GetMapping("/{movieId}")
     public ResponseEntity getMovieInfoById(@PathVariable("movieId") String movieId){
-        System.out.println(movieId);
-        return ResponseEntity.status(HttpStatus.OK).body(iMovieRepository.findById(movieId));
+        Movie movie = iMovieRepository.getOne(movieId);
+        MovieApiResponse response = getMovieApiResponse(movie);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
 
     }
 
@@ -41,6 +49,15 @@ public class MovieController {
             throw  new FailedToCreateMovie("Failed To Create Movie !");
         }
 
+    }
+
+    private List<MovieApiResponse> BuildApiResponseForMovie(List<Movie> movieList) {
+        List<MovieApiResponse> responseList = new ArrayList<>();
+        for(Movie movie: movieList){
+            responseList.add(getMovieApiResponse(movie));
+        }
+
+        return responseList;
     }
 
     private MovieApiResponse getMovieApiResponse(Movie movie) {
