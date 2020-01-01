@@ -27,7 +27,7 @@ public class MovieController {
     @GetMapping("/{movieId}")
     public ResponseEntity getMovieInfoById(@PathVariable("movieId") String movieId){
         System.out.println(movieId);
-        return ResponseEntity.status(HttpStatus.OK).body(iMovieRepository.findBymovieId(movieId));
+        return ResponseEntity.status(HttpStatus.OK).body(iMovieRepository.findById(movieId));
 
     }
 
