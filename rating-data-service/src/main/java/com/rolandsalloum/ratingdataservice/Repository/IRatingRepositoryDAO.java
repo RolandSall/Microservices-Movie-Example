@@ -1,11 +1,14 @@
 package com.rolandsalloum.ratingdataservice.Repository;
 
-        import com.rolandsalloum.ratingdataservice.Model.Rating;
-        import org.springframework.data.jpa.repository.JpaRepository;
+import com.rolandsalloum.ratingdataservice.Model.Rating;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface IRatingRepositoryDAO extends JpaRepository<Rating,String > {
+import java.util.List;
 
-/*List<Rating> findByUserId(String userId);*/
+public interface IRatingRepositoryDAO extends JpaRepository<Rating, String> {
+
+    List<Rating> findByUserId(String userId);
+
 
 
 }
