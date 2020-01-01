@@ -1,38 +1,32 @@
 package com.rolandsalloum.ratingdataservice.Controller;
 
-import com.rolandsalloum.ratingdataservice.Model.Rating;
-import com.rolandsalloum.ratingdataservice.Repository.IRatingRepositoryDAO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/ratingdata")
 public class RatingController {
 
-    private IRatingRepositoryDAO iRatingRepositoryDAO;
+  /*  private IRatingRepositoryDAO iRatingRepositoryDAO;
 
     @Autowired
     public RatingController(IRatingRepositoryDAO iRatingRepositoryDAO) {
         this.iRatingRepositoryDAO = iRatingRepositoryDAO;
     }
-
-    @GetMapping("/{userId}")
+*/
+ /*   @GetMapping("/{userId}")
     public ResponseEntity getAllMovieRatedByUser(@PathVariable("userId") String userId){
         List<Rating> ratingList = iRatingRepositoryDAO.findByUserId(userId);
         List<RatingApiResponse> responseList = buildApiResponseForRating(ratingList);
         return ResponseEntity.status(HttpStatus.OK).body(responseList);
     }
+*/
 
-
-    @PostMapping("")
+ /*   @PostMapping("")
     public ResponseEntity createRatingForMovieByUser(@RequestBody RatingApiRequest request) throws FailedToCreateRating {
         try {
             Rating rating = getRatingFromRequest(request);
+            *//*iRatingRepositoryDAO.save(rating);*//*
             RatingApiResponse response = getRatingApiResponse(rating);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
@@ -65,5 +59,5 @@ public class RatingController {
                 .movieId(request.getMovieId())
                 .rating(request.getRating())
                 .build();
-    }
+    }*/
 }
