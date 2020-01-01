@@ -15,6 +15,10 @@ import java.util.List;
 public class MovieCatalogController {
 
 
+    /** get all rated movie Ids
+        For each movie Id, call movie info service and get details
+        put them in a list **/
+
     @GetMapping("/{userId}")
     public List<CatalogItem> getCatalogByUserId(@PathVariable("userId") String userId){
 
