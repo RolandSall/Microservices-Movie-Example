@@ -17,7 +17,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/catalog")
@@ -34,21 +33,20 @@ public class MovieCatalogController {
     public ResponseEntity getCatalogByUserId(@PathVariable("userId") String userId) {
         /*** Using RestTemplate ***/
 
-       List<CatalogItem> catalogList = new ArrayList();
-    /*  ResponseEntity<Rating[]> ratingResponse = restTemplate.getForEntity("http://localhost:8081/ratingdata/" + userId, Rating[].class);
+        List<CatalogItem> catalogList = new ArrayList();
+        ResponseEntity<Rating[]> ratingResponse = restTemplate.getForEntity("http://localhost:8081/ratingdata/users/" + userId, Rating[].class);
         List<Rating> ratingForUser = Arrays.asList(ratingResponse.getBody());
 
 
-        for(Rating rating: ratingForUser){
+        for (Rating rating : ratingForUser) {
             Movie movie = restTemplate.getForObject("http://localhost:8082/movies/" + rating.getMovieId(), Movie.class);
-            catalogList.add(new CatalogItem(movie.getName(),"Desc",rating.getRating()));
+            catalogList.add(new CatalogItem(movie.getName(), "Desc", rating.getRating()));
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(catalogList);*/
 
         /*** Using WebClient: Asynchronous-Reactive programming   ***/
 
-        List<Rating> ratingForUser = Arrays.asList(Objects.requireNonNull(webClientBuilder.build()
+    /*    List<Rating> ratingForUser = Arrays.asList(Objects.requireNonNull(webClientBuilder.build()
                 .get()
                 .uri("http://localhost:8081/ratingdata/" + userId)
                 .retrieve()
@@ -64,7 +62,7 @@ public class MovieCatalogController {
                     .block();
             catalogList.add(new CatalogItem(movie.getName(),"Desc",rating.getRating()));
         }
-
+*/
         return ResponseEntity.status(HttpStatus.OK).body(catalogList);
 
     }
