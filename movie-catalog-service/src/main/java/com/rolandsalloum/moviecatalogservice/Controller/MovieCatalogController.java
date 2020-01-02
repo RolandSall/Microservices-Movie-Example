@@ -31,10 +31,10 @@ public class MovieCatalogController {
 
     @GetMapping("/{userId}")
     public ResponseEntity getCatalogByUserId(@PathVariable("userId") String userId) {
-        /*** Using RestTemplate ***/
+        /*** Using RestTemplate hard coding without service discovery ***/
 
         List<CatalogItem> catalogList = new ArrayList();
-        ResponseEntity<Rating[]> ratingResponse = restTemplate.getForEntity("http://localhost:8081/ratingdata/users/" + userId, Rating[].class);
+    /*    ResponseEntity<Rating[]> ratingResponse = restTemplate.getForEntity("http://localhost:8081/ratingdata/users/" + userId, Rating[].class);
         List<Rating> ratingForUser = Arrays.asList(ratingResponse.getBody());
 
 
@@ -42,7 +42,7 @@ public class MovieCatalogController {
             Movie movie = restTemplate.getForObject("http://localhost:8082/movies/" + rating.getMovieId(), Movie.class);
             catalogList.add(new CatalogItem(movie.getName(), "Desc", rating.getRating()));
         }
-
+*/
 
         /*** Using WebClient: Asynchronous-Reactive programming   ***/
 
@@ -63,6 +63,18 @@ public class MovieCatalogController {
             catalogList.add(new CatalogItem(movie.getName(),"Desc",rating.getRating()));
         }
 */
+
+        /*** Using RestTemplate using service discovery ***/
+
+        ResponseEntity<Rating[]> ratingResponse = restTemplate.getForEntity("http://rating-data-service/ratingdata/users/" + userId, Rating[].class);
+        List<Rating> ratingForUser = Arrays.asList(ratingResponse.getBody());
+
+
+        for (Rating rating : ratingForUser) {
+            Movie movie = restTemplate.getForObject("http://movie-info-service/movies/" + rating.getMovieId(), Movie.class);
+            catalogList.add(new CatalogItem(movie.getName(), "Desc", rating.getRating()));
+        }
+
         return ResponseEntity.status(HttpStatus.OK).body(catalogList);
 
     }
