@@ -12,11 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/catalog")
@@ -25,12 +26,16 @@ public class MovieCatalogController {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private WebClient.Builder webClientBuilder;
 
 
     @GetMapping("/{userId}")
-    public ResponseEntity getCatalogByUserId(@PathVariable("userId") String userId){
-        List<CatalogItem> catalogList = new ArrayList();
-        ResponseEntity<Rating[]> ratingResponse = restTemplate.getForEntity("http://localhost:8081/ratingdata/" + userId, Rating[].class);
+    public ResponseEntity getCatalogByUserId(@PathVariable("userId") String userId) {
+        /*** Using RestTemplate ***/
+
+       List<CatalogItem> catalogList = new ArrayList();
+    /*  ResponseEntity<Rating[]> ratingResponse = restTemplate.getForEntity("http://localhost:8081/ratingdata/" + userId, Rating[].class);
         List<Rating> ratingForUser = Arrays.asList(ratingResponse.getBody());
 
 
@@ -39,10 +44,30 @@ public class MovieCatalogController {
             catalogList.add(new CatalogItem(movie.getName(),"Desc",rating.getRating()));
         }
 
+        return ResponseEntity.status(HttpStatus.OK).body(catalogList);*/
+
+        /*** Using WebClient: Asynchronous-Reactive programming   ***/
+
+        List<Rating> ratingForUser = Arrays.asList(Objects.requireNonNull(webClientBuilder.build()
+                .get()
+                .uri("http://localhost:8081/ratingdata/" + userId)
+                .retrieve()
+                .bodyToMono(Rating[].class)
+                .block()));
+
+        for(Rating rating: ratingForUser){
+            Movie movie = webClientBuilder.build()
+                    .get()
+                    .uri("http://localhost:8082/movies/" + rating.getMovieId())
+                    .retrieve()
+                    .bodyToMono(Movie.class)
+                    .block();
+            catalogList.add(new CatalogItem(movie.getName(),"Desc",rating.getRating()));
+        }
+
         return ResponseEntity.status(HttpStatus.OK).body(catalogList);
+
     }
-
-
 
 
 }
