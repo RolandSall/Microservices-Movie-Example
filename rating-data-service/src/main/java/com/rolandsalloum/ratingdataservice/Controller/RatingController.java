@@ -22,7 +22,7 @@ public class RatingController {
     }
 
 
-    @GetMapping("/{userId}")
+    @GetMapping("/users/{userId}")
     public ResponseEntity getAllMovieRatedByUser(@PathVariable("userId") String userId) {
         List<Rating> ratingList = iRatingRepositoryDAO.findByUserId(userId);
         List<RatingApiResponse> responseList = buildApiResponseForRating(ratingList);
