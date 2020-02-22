@@ -15,9 +15,6 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @Entity
 public class Rating {
-
-
-
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
