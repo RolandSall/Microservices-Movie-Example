@@ -31,10 +31,14 @@ public class MovieService implements IMovieService {
     }
 
     private ResponseEntity getCatalogFallback(List<Rating> ratingForUser) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(getFallBackCatalogResponse());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(getFallBackCatalogResponse(ratingForUser));
     }
 
-    private List<CatalogItem> getFallBackCatalogResponse() {
-        return Arrays.asList(CatalogItem.builder().name("Movie name not found").description("").rating(0).build());
+    private List<CatalogItem> getFallBackCatalogResponse(List<Rating> ratingForUser) {
+        List<CatalogItem> catalogList = new ArrayList();
+        for (Rating rating : ratingForUser) {
+            catalogList.add(CatalogItem.builder().name("Movie name not found").description("").rating(rating.getRating()).build());
+        }
+        return catalogList;
     }
 }
